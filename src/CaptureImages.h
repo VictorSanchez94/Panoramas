@@ -1,3 +1,6 @@
+#ifndef __CAPTUREIMAGES_H__
+#define __CAPTUREIMAGES_H__
+
 #include "opencv2/imgproc/imgproc.hpp"
 #include "opencv2/highgui/highgui.hpp"
 #include <stdlib.h>
@@ -5,14 +8,9 @@
 #include <math.h>
 #include <iostream>
 
-#include"CaptureImages.h"
-
 using namespace cv;
 using namespace std;
 
+int captureImages (int camera);
 
-int main( int argc, char** argv )
-{
-	int i = captureImages(0);
-
-}
+#endif
