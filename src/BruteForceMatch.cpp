@@ -11,8 +11,8 @@ using namespace std;
 void bruteForceMatch()
 {
 
-  Mat img_1 = imread( "./Data/0.pgm", CV_LOAD_IMAGE_GRAYSCALE );
-  Mat img_2 = imread( "./Data/1.pgm", CV_LOAD_IMAGE_GRAYSCALE );
+  Mat img_1 = imread( "./Data/001.jpg", CV_LOAD_IMAGE_GRAYSCALE );
+  Mat img_2 = imread( "./Data/002.jpg", CV_LOAD_IMAGE_GRAYSCALE );
 
 
   //-- Step 1: Detect the keypoints using SURF Detector
@@ -34,8 +34,10 @@ void bruteForceMatch()
   extractor.compute( img_2, keypoints_2, descriptors_2 );
 
   //-- Step 3: Matching descriptor vectors with a brute force matcher
-  BFMatcher matcher(NORM_L2);
-  std::vector< DMatch > matches;
+  BFMatcher matcher(NORM_L2, true);		//Mejor resultado con validacion cruzada
+  //std::vector<vector<DMatch> > matches;
+  std::vector<DMatch> matches;
+  //matcher.knnMatch( descriptors_1, descriptors_2, matches, 2);
   matcher.match( descriptors_1, descriptors_2, matches );
 
   //-- Draw matches
