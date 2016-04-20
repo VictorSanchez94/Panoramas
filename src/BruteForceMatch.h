@@ -1,19 +1,16 @@
+#ifndef __BRUTEFORCEMATCH_H__
+#define __BRUTEFORCEMATCH_H__
+
 #include "opencv2/imgproc/imgproc.hpp"
 #include "opencv2/highgui/highgui.hpp"
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
 #include <iostream>
-#include "BruteForceMatch.h"
-#include "CaptureImages.h"
 
 using namespace cv;
 using namespace std;
 
+void bruteForceMatch ();
 
-int main( int argc, char** argv )
-{
-	int i = captureImages(0);
-	bruteForceMatch();
-
-}
+#endif

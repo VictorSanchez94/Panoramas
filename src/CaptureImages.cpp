@@ -38,6 +38,7 @@ int captureImages (int camera) {
 
   while (key!=27 && TheVideoCapturer.grab()) {
     TheVideoCapturer.retrieve(bgrMap);
+    cvtColor(bgrMap, bgrMap, CV_BGR2GRAY);
 
     imshow("BGR image", bgrMap);
 
@@ -45,6 +46,7 @@ int captureImages (int camera) {
       imwrite("Data/" + snapshotFilename + ".pgm", bgrMap);
       numSnapshot++;
       snapshotFilename = static_cast<std::ostringstream*>(&(std::ostringstream() << numSnapshot))->str();
+      cout << "Captura guardada.";
         }
 
     key=waitKey(20);
