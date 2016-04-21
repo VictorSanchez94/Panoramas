@@ -49,7 +49,7 @@ int captureImages (int camera) {
       cout << "Captura guardada.";
         }
 
-    key=waitKey(20);
+    key = waitKey(20);
   }
   cvDestroyWindow("BGR image"); //Destroy Window
 

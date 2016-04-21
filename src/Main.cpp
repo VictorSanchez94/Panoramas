@@ -6,6 +6,7 @@
 #include <iostream>
 #include "BruteForceMatch.h"
 #include "CaptureImages.h"
+#include "Panorama.h"
 
 using namespace cv;
 using namespace std;
@@ -13,7 +14,8 @@ using namespace std;
 
 int main( int argc, char** argv )
 {
-	int i = captureImages(0);
+	//int i = captureImages(0);
 	bruteForceMatch();
+
 
 }
