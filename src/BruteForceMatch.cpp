@@ -10,10 +10,8 @@
 using namespace cv;
 using namespace std;
 
-void bruteForceMatch() {
+Mat bruteForceMatch(Mat img_1, Mat img_2) {
 
-  Mat img_1 = imread( "./Data/001p.jpg", CV_LOAD_IMAGE_GRAYSCALE );
-  Mat img_2 = imread( "./Data/002p.jpg", CV_LOAD_IMAGE_GRAYSCALE );
 
   //-- Step 1: Detect the keypoints using SURF Detector
   int minHessian = 400;
@@ -58,8 +56,9 @@ void bruteForceMatch() {
   //-- Show detected matches
   imshow("Matches", img_matches );
 
-  panorama(img_1, img_2, H, obj, scene, img_matches);
+  Mat nuevaImagen = panorama(img_1, img_2, H);
 
   waitKey(0);
 
+  return nuevaImagen;
   }

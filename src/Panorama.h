@@ -12,6 +12,6 @@
 using namespace cv;
 using namespace std;
 
-void panorama (Mat img1, Mat img2, Mat H, vector<Point2f> obj, vector<Point2f> scene, Mat img_matches);
+Mat panorama (Mat img1, Mat img2, Mat H);
 
 #endif
