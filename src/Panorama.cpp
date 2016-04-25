@@ -11,57 +11,88 @@ using namespace cv;
 using namespace std;
 
 /*
-* Calcula las coordenadas resultantes de un punto
-* al aplicarle una Homografia
-*/
+ * Calcula las coordenadas resultantes de un punto
+ * al aplicarle una Homografia
+ */
 pair<double, double> calculateCoor(Mat H, int x, int y) {
-  pair<double, double> p;
-  double xC = H.at<double>(0, 0) * x + H.at<double>(0, 1) * y + H.at<double>(0, 2);
-  double yC = H.at<double>(1, 0) * x + H.at<double>(1, 1) * y + H.at<double>(1, 2);
-  double zC = H.at<double>(2, 0) * x + H.at<double>(2, 1) * y + H.at<double>(2, 2);
-  p.first = round(xC / zC);
-  p.second = round(yC / zC);
-  return p;
+	pair<double, double> p;
+	double xC = H.at<double>(0, 0) * x + H.at<double>(0, 1) * y + H.at<double>(0, 2);
+	double yC = H.at<double>(1, 0) * x + H.at<double>(1, 1) * y + H.at<double>(1, 2);
+	double zC = H.at<double>(2, 0) * x + H.at<double>(2, 1) * y + H.at<double>(2, 2);
+	p.first = round(xC / zC);
+	p.second = round(yC / zC);
+	return p;
 }
 
 /*
-* Calcula el offset necesario para que la imagen no tenga pixeles
-* en coordenadas negativas y si alguno de los valores sea atipico
-* devuelve este
-*/
+ * Calcula el offset necesario para que la imagen no tenga pixeles
+ * en coordenadas negativas y si alguno de los valores sea atipico
+ * devuelve este
+ */
 pair<int, int> calculateOffset(Mat H, Mat img) {
 
-  pair<double, double> A = calculateCoor(H, 0, 0);
-  pair<double, double> B = calculateCoor(H, 0, img.rows);
-  pair<double, double> C = calculateCoor(H, img.cols, 0);
-  pair<double, double> D = calculateCoor(H, img.cols, img.rows);
+	pair<double, double> A = calculateCoor(H, 0, 0);
+	pair<double, double> B = calculateCoor(H, 0, img.rows);
+	pair<double, double> C = calculateCoor(H, img.cols, 0);
+	pair<double, double> D = calculateCoor(H, img.cols, img.rows);
 
-  double minX = min(min(A.first, B.first), min(C.first, D.first));
-  double minY = min(min(A.second, B.second), min(C.second, D.second));
+	double minX = min(min(A.first, B.first), min(C.first, D.first));
+	double minY = min(min(A.second, B.second), min(C.second, D.second));
 
-  pair<double, double> p;
-  p.first = minX < 0 ? abs(minX) : 0;
-  p.second = minY < 0 ? abs(minY) : 0;
+	pair<double, double> p;
+	p.first = minX < 0 ? abs(minX) : 0;
+	p.second = minY < 0 ? abs(minY) : 0;
 
-  return p;
+	return p;
 }
 
 /*
-* Aplica un offset a una homografia
-*/
+ * Aplica un offset a una homografia
+ */
 void applyOffset(Mat m, double x, double y) {
-  Mat f = Mat::eye(3, 3, m.type());
-  f.at<double>(0, 2) = x;
-  f.at<double>(1, 2) = y;
-  Mat R = f*m;
-  R.copyTo(m);
-  R.release();
-  f.release();
+	Mat f = Mat::eye(3, 3, m.type());
+	f.at<double>(0, 2) = x;
+	f.at<double>(1, 2) = y;
+	Mat R = f*m;
+	R.copyTo(m);
+	R.release();
+	f.release();
+}
+
+void crop(Mat &in) {
+	Scalar sumaX = 0;
+	int ancho = 0;
+	for (int j = 5; j < in.rows; j++) {
+		sumaX = sum(in.row(j));
+		if(sumaX.val[0] > 0){
+
+		}else{
+			ancho = j;
+			break;
+		}
+	}
+
+	Scalar sumaY = 0;
+	int alto = 0;
+	for (int j = 5; j < in.cols; j++) {
+		sumaY = sum(in.col(j));
+		if(sumaY.val[0] > 0){
+
+		}else{
+			alto = j;
+			break;
+		}
+	}
+
+	cout << "Ancho " << ancho << " " << in.rows << endl;
+	cout << "Alto " << alto << " " << in.cols << endl;
+	in = in.operator ()(Range(0,ancho), Range(0,alto));
 }
 
 Mat panorama(Mat img1, Mat img2, Mat H) {
 	//En primer lugar se calcula y se aplica el offset a la homografia para no perder informacion
 	pair<double, double> off = calculateOffset(H, img1);
+	//cout << off.first << " " << off.second << endl;
 	applyOffset(H, off.first, off.second);
 	std::vector<Point2f> obj_corners(4);
 	obj_corners[0] = cvPoint(0, 0);
@@ -82,9 +113,9 @@ Mat panorama(Mat img1, Mat img2, Mat H) {
 		}
 	}
 
-	imshow("img2", img2);
-	imshow("img1", img1);
-	imshow("nueva1", nueva1);
+	//imshow("img2", img2);
+	//imshow("img1", img1);
+	imshow("nueva1_cortada", nueva1);
 
 
 	waitKey(0);
