@@ -14,8 +14,8 @@ Mat bgrMap;
 int captureImages (int camera) {
   char key = 0;
 
-  int numSnapshot = 0;
-  std::string snapshotFilename = "0";
+  int numSnapshot = 1;
+  std::string snapshotFilename = "1";
 
   cout << "Press 's' to take snapshots" << std::endl;
   cout << "Press 'Esc' to finish" << std::endl;
@@ -43,7 +43,7 @@ int captureImages (int camera) {
     imshow("BGR image", bgrMap);
 
     if (key == 115) {
-      imwrite("Data/" + snapshotFilename + ".pgm", bgrMap);
+      imwrite("Data/Captures/" + snapshotFilename + ".jpg", bgrMap);
       numSnapshot++;
       snapshotFilename = static_cast<std::ostringstream*>(&(std::ostringstream() << numSnapshot))->str();
       cout << "Captura guardada.";
@@ -53,16 +53,5 @@ int captureImages (int camera) {
   }
   cvDestroyWindow("BGR image"); //Destroy Window
 
-  return 0;
-
-  /*for(int photo=0; photo < numSnapshot; photo=photo+1){
-	Mat image;
-	stringstream s;
-	s << photo << ".png";
-	//std::cout << s;
-	image = imread(s.str(), 1 );
-	namedWindow( "Display Image", WINDOW_AUTOSIZE );
-	imshow( "Display Image", image );
-	waitKey(0);
-  }*/
+  return numSnapshot;
 }
