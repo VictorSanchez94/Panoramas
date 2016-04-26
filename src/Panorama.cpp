@@ -59,40 +59,45 @@ void applyOffset(Mat m, double x, double y) {
 	f.release();
 }
 
-void crop(Mat &in) {
+void crop(Mat &in, Mat img2, pair<double, double> off) {
 	Scalar sumaX = 0;
-	int ancho = 0;
-	for (int j = 5; j < in.rows; j++) {
-		sumaX = sum(in.row(j));
+	int ancho = 0, inicioAncho = -1;
+	for (int j = 5; j < in.cols; j++) {
+		sumaX = sum(in.col(j));
 		if(sumaX.val[0] > 0){
-
+			if(inicioAncho==-1){
+				inicioAncho=j;
+			}
 		}else{
 			ancho = j;
-			break;
+			if(inicioAncho!=-1){ //Cochinada
+				break;
+			}
+
 		}
 	}
 
 	Scalar sumaY = 0;
-	int alto = 0;
-	for (int j = 5; j < in.cols; j++) {
-		sumaY = sum(in.col(j));
+	int alto = 0, inicioAlto = -1;
+	for (int j = 5; j < in.rows; j++) {
+		sumaY = sum(in.row(j));
 		if(sumaY.val[0] > 0){
-
+			if(inicioAlto==-1){
+				inicioAlto=j;
+			}
 		}else{
 			alto = j;
-			break;
+			if(inicioAncho!=-1){ //Cochinada
+				break;
+			}
 		}
 	}
-
-	cout << "Ancho " << ancho << " " << in.rows << endl;
-	cout << "Alto " << alto << " " << in.cols << endl;
-	in = in.operator ()(Range(0,ancho), Range(0,alto));
+	in = in.operator ()(Range(inicioAlto, alto), Range(inicioAncho, ancho));
 }
 
 Mat panorama(Mat img1, Mat img2, Mat H) {
 	//En primer lugar se calcula y se aplica el offset a la homografia para no perder informacion
 	pair<double, double> off = calculateOffset(H, img1);
-	//cout << off.first << " " << off.second << endl;
 	applyOffset(H, off.first, off.second);
 	std::vector<Point2f> obj_corners(4);
 	obj_corners[0] = cvPoint(0, 0);
@@ -100,6 +105,8 @@ Mat panorama(Mat img1, Mat img2, Mat H) {
 	obj_corners[2] = cvPoint(img1.cols, img1.rows);
 	obj_corners[3] = cvPoint(0, img1.rows);
 	std::vector<Point2f> scene_corners(4);
+	pair<int, int> ancho_img1_t = calculateCoor(H,0, img1.cols);
+	pair<int, int> alto_img1_t = calculateCoor(H,img1.rows, img1.rows);
 
 	Mat nueva1(img1.rows+img2.rows, img1.cols+img2.cols, img1.type(), Scalar(0, 0, 0));
 	warpPerspective(img1, nueva1, H, nueva1.size(), INTER_LINEAR, BORDER_TRANSPARENT);
@@ -107,16 +114,13 @@ Mat panorama(Mat img1, Mat img2, Mat H) {
 	for (int i=0; i<img2.rows; i++){
 		for (int j=0; j<img2.cols; j++){
 			int p = img2.at<uchar>(i,j);
-			if(nueva1.at<uchar>(i+off.second,j+off.first) == 0){
-				nueva1.at<uchar>(i+off.second,j+off.first) = p;
-			}
+			nueva1.at<uchar>(i+off.second,j+off.first) = p;
 		}
 	}
 
-	//imshow("img2", img2);
-	//imshow("img1", img1);
+	imshow("nueva1", nueva1);
+	crop(nueva1, img2, off);
 	imshow("nueva1_cortada", nueva1);
-
 
 	waitKey(0);
 	return nueva1;
