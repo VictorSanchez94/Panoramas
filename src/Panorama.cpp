@@ -118,9 +118,8 @@ Mat panorama(Mat img1, Mat img2, Mat H) {
 		}
 	}
 
-	imshow("nueva1", nueva1);
 	crop(nueva1, img2, off);
-	imshow("nueva1_cortada", nueva1);
+	imshow("Panorama", nueva1);
 
 	waitKey(0);
 	return nueva1;
