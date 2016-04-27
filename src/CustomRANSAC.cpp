@@ -281,7 +281,7 @@ bool isColinear(const vector<int> & orderin, const vector<Point2f> & Key1)
 }
 
 
-void RANSAC_DLT(const vector<Point2f> & Key1, const vector<Point2f> & Key2, Mat & H_final)
+void customRANSAC(const vector<Point2f> & Key1, const vector<Point2f> & Key2, Mat & H_final)
 {
     int numAll = 0;
     if(Key1.size() == Key2.size())
@@ -310,29 +310,27 @@ void RANSAC_DLT(const vector<Point2f> & Key1, const vector<Point2f> & Key2, Mat 
     while(N > sample)
     {
         iscolinear = true;
-        while(iscolinear == true)
-        {
+        while(iscolinear == true){
           iscolinear = false;
-          for(int i = 0; i < nu; i++)
-          {
+          for(int i = 0; i < nu; i++){
             orderin[i] = rand() % numAll;
           }
-          if(iscolinear == false)
-              iscolinear = isColinear(orderin, Key1);
+          if(iscolinear == false){
+        	  iscolinear = isColinear(orderin, Key1);
+          }
         }
 
         DLT(H,KeyNorm1,KeyNorm2, orderin);
 
         numInlier = InliersCount(H,KeyNorm1,KeyNorm2, inliers, dist_std);
 
-        if(numInlier > Max_num || (numInlier == Max_num &&  current_dist_std > dist_std))
-        {
+        if(numInlier > Max_num || (numInlier == Max_num &&  current_dist_std > dist_std)) {
             Max_num = numInlier;
             max_inliers.clear();
             //max_inliers.swap(vector<int>());
             max_inliers.resize(0);
             //if(max_inliers.size() == 0)
-            //    cout<<"Whether max_inliers is empty: "<<max_inliers.size()<<endl;
+            //	cout<<"Whether max_inliers is empty: "<<max_inliers.size()<<endl;
             max_inliers.swap(inliers);
             H_final = H;
             //max_inliers = inliers;

@@ -66,7 +66,7 @@ Mat bruteForceMatch(Mat img_1, Mat img_2, int H_type, char* tipo_r) {
 			  Mat H(3,3,CV_64FC1);
 			  vector<Point2f> key1, key2;
 			  FeatureExtraction(img_1, img_2, key1, key2);
-			  RANSAC_DLT(key1, key2, H);
+			  customRANSAC(key1, key2, H);
 			  imshow("Matches", img_matches );
 			  nuevaImagen = panorama(img_1, img_2, H);
 		  }else{

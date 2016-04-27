@@ -16,7 +16,7 @@ bool isColinear(const vector<int> & orderin, const vector<Point2f> & Key1);
 
 void  LinearBlendPrepare( Mat& img1,  Mat& img2);
 
-void RANSAC_DLT(const vector<Point2f> & Key1, const vector<Point2f> & Key2, Mat & H_final);
+void customRANSAC(const vector<Point2f> & Key1, const vector<Point2f> & Key2, Mat & H_final);
 
 void FeatureExtraction(const Mat& img1, const Mat& img2, vector<Point2f> & Key1, vector<Point2f> & Key2);
 
