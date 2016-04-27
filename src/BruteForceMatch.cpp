@@ -6,11 +6,12 @@
 #include "opencv2/highgui/highgui.hpp"
 #include "opencv2/nonfree/features2d.hpp"
 #include "Panorama.h"
+#include "CustomRANSAC.h"
 
 using namespace cv;
 using namespace std;
 
-Mat bruteForceMatch(Mat img_1, Mat img_2, char* tipo_r) {
+Mat bruteForceMatch(Mat img_1, Mat img_2, int H_type, char* tipo_r) {
 	try{
 		//Inicializaciones necesarias
 		int minHessian = 400;
@@ -56,11 +57,21 @@ Mat bruteForceMatch(Mat img_1, Mat img_2, char* tipo_r) {
 		}
 
 		//Se cacula la homografia resultante de los puntos calculados
-		Mat H = findHomography( obj, scene, CV_RANSAC );
-
-		imshow("Matches", img_matches );
-
-		Mat nuevaImagen = panorama(img_1, img_2, H);
+		Mat nuevaImagen;
+		  if (H_type == 0){
+			  Mat H = findHomography( obj, scene, CV_RANSAC );
+			  imshow("Matches", img_matches );
+			  nuevaImagen = panorama(img_1, img_2, H);
+		  }else if(H_type == 1) {
+			  Mat H(3,3,CV_64FC1);
+			  vector<Point2f> key1, key2;
+			  FeatureExtraction(img_1, img_2, key1, key2);
+			  RANSAC_DLT(key1, key2, H);
+			  imshow("Matches", img_matches );
+			  nuevaImagen = panorama(img_1, img_2, H);
+		  }else{
+			  cout << "Aprende a meter los parametros, parguela" << endl;
+		  }
 		return nuevaImagen;
 
 	}catch(...){

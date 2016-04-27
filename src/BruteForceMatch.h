@@ -11,6 +11,6 @@
 using namespace cv;
 using namespace std;
 
-Mat bruteForceMatch (Mat img_1, Mat img_2, char* tipo_r);
+Mat bruteForceMatch (Mat img_1, Mat img_2, int H_type, char* tipo_r);
 
 #endif
