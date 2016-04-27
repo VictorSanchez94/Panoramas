@@ -22,7 +22,7 @@ int main( int argc, char** argv )
 			Mat img_1 = imread( "./Data/Captures/1.jpg", CV_LOAD_IMAGE_GRAYSCALE );
 			resize(img_1, img_1, Size(0,0), 0.8, 0.8);
 
-			for (int i=1; i<9; i++){
+			for (int i=1; i<numShots; i++){
 				stringstream rutaImagen1, rutaImagen2;
 				rutaImagen1 << "./Data/Captures/" << i << ".jpg";
 				rutaImagen2 << "./Data/Captures/" << i+1 << ".jpg";
