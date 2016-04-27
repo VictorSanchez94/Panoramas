@@ -46,7 +46,7 @@ int captureImages (int camera) {
       imwrite("Data/Captures/" + snapshotFilename + ".jpg", bgrMap);
       numSnapshot++;
       snapshotFilename = static_cast<std::ostringstream*>(&(std::ostringstream() << numSnapshot))->str();
-      cout << "Captura guardada.";
+      //cout << "Captura guardada.";
         }
 
     key = waitKey(20);

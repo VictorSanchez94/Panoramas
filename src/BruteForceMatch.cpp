@@ -10,42 +10,63 @@
 using namespace cv;
 using namespace std;
 
-Mat bruteForceMatch(Mat img_1, Mat img_2) {
+Mat bruteForceMatch(Mat img_1, Mat img_2, char* tipo_r) {
+	try{
+		//Inicializaciones necesarias
+		int minHessian = 400;
+		std::vector<KeyPoint> keypoints_1, keypoints_2;
+		Mat descriptors_1, descriptors_2;
+		vector<DMatch> matches;
+		Mat img_matches;
+		vector<Point2f> obj, scene;
 
-  int minHessian = 400;
+		//Se selecciona el tipo de reconocimiento que se desea
+		if(strcmp(tipo_r, "sift")==0){
+			SiftFeatureDetector detector( minHessian );
+			SiftDescriptorExtractor extractor;
+			detector.detect( img_1, keypoints_1 );
+			detector.detect( img_2, keypoints_2 );
+			extractor.compute( img_1, keypoints_1, descriptors_1 );
+			extractor.compute( img_2, keypoints_2, descriptors_2 );
+		}else if(strcmp(tipo_r, "surf")==0){
+			SurfFeatureDetector detector( minHessian );
+			SurfDescriptorExtractor extractor;
+			detector.detect( img_1, keypoints_1 );
+			detector.detect( img_2, keypoints_2 );
+			extractor.compute( img_1, keypoints_1, descriptors_1 );
+			extractor.compute( img_2, keypoints_2, descriptors_2 );
+		}else if(strcmp(tipo_r, "orb")==0){
+			OrbFeatureDetector detector( minHessian );
+			OrbDescriptorExtractor extractor;
+			detector.detect( img_1, keypoints_1 );
+			detector.detect( img_2, keypoints_2 );
+			extractor.compute( img_1, keypoints_1, descriptors_1 );
+			extractor.compute( img_2, keypoints_2, descriptors_2 );
+		}
 
-  SurfFeatureDetector detector( minHessian );
+		//Una vez que se han calculado los puntos de interes se emparejan con fuerza bruta
+		BFMatcher matcher(NORM_L2, true);		//Mejor resultado con validacion cruzada que con ratio al segundo vecino
+		matcher.match( descriptors_1, descriptors_2, matches );
 
-  std::vector<KeyPoint> keypoints_1, keypoints_2;
+		drawMatches( img_1, keypoints_1, img_2, keypoints_2, matches, img_matches );
 
-  detector.detect( img_1, keypoints_1 );
-  detector.detect( img_2, keypoints_2 );
+		for (int i=0; i < matches.size(); i++) {
+			obj.push_back( keypoints_1[ matches[i].queryIdx ].pt );
+			scene.push_back( keypoints_2[ matches[i].trainIdx ].pt );
+		}
 
-  SurfDescriptorExtractor extractor;
+		//Se cacula la homografia resultante de los puntos calculados
+		Mat H = findHomography( obj, scene, CV_RANSAC );
 
-  Mat descriptors_1, descriptors_2;
+		imshow("Matches", img_matches );
 
-  extractor.compute( img_1, keypoints_1, descriptors_1 );
-  extractor.compute( img_2, keypoints_2, descriptors_2 );
+		Mat nuevaImagen = panorama(img_1, img_2, H);
+		return nuevaImagen;
 
-  BFMatcher matcher(NORM_L2, true);		//Mejor resultado con validacion cruzada
-  vector<DMatch> matches;
-  matcher.match( descriptors_1, descriptors_2, matches );
-
-  Mat img_matches;
-  drawMatches( img_1, keypoints_1, img_2, keypoints_2, matches, img_matches );
-
-  vector<Point2f> obj, scene;
-
-  for (int i=0; i < matches.size(); i++) {
-    obj.push_back( keypoints_1[ matches[i].queryIdx ].pt );
-    scene.push_back( keypoints_2[ matches[i].trainIdx ].pt );
-  }
-  Mat H = findHomography( obj, scene, CV_RANSAC );
+	}catch(...){
+		cout << "Error al calcular puntos de interes/homografia." << endl;
+		exit(0);
+	}
 
 
-  imshow("Matches", img_matches );
-
-  Mat nuevaImagen = panorama(img_1, img_2, H);
-  return nuevaImagen;
-  }
+}
