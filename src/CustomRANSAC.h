@@ -14,7 +14,7 @@ int InliersCount(const Mat& H, const vector<Point2f> & KeyNorm1, const vector<Po
 
 bool isColinear(const vector<int> & orderin, const vector<Point2f> & Key1);
 
-void  LinearBlendPrepare( Mat& img1,  Mat& img2);
+//void  LinearBlendPrepare( Mat& img1,  Mat& img2);
 
 void customRANSAC(const vector<Point2f> & Key1, const vector<Point2f> & Key2, Mat & H_final);
 

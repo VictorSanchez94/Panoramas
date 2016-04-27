@@ -11,7 +11,7 @@
 using namespace cv;
 using namespace std;
 
-Mat bruteForceMatch(Mat img_1, Mat img_2, int H_type, char* tipo_r) {
+Mat bruteForceMatch(Mat img_1, Mat img_2, int H_type, char* tipo_r, char* tipoMatcher) {
 	try{
 		//Inicializaciones necesarias
 		int minHessian = 400;
@@ -45,11 +45,19 @@ Mat bruteForceMatch(Mat img_1, Mat img_2, int H_type, char* tipo_r) {
 			extractor.compute( img_2, keypoints_2, descriptors_2 );
 		}
 
-		//Una vez que se han calculado los puntos de interes se emparejan con fuerza bruta
-		BFMatcher matcher(NORM_L2, true);		//Mejor resultado con validacion cruzada que con ratio al segundo vecino
-		matcher.match( descriptors_1, descriptors_2, matches );
+		if(strcmp(tipoMatcher, "-f") == 0) {
+			FlannBasedMatcher matcher;
+			matcher.match( descriptors_1, descriptors_2, matches );
+		}else if(strcmp(tipoMatcher, "-b") == 0) {
+			//Una vez que se han calculado los puntos de interes se emparejan con fuerza bruta
+			BFMatcher matcher(NORM_L2, true);		//Mejor resultado con validacion cruzada que con ratio al segundo vecino
+			matcher.match( descriptors_1, descriptors_2, matches );
+		}else{
+			cout << "Aprende a meter parametros" << endl;
+		}
 
-		drawMatches( img_1, keypoints_1, img_2, keypoints_2, matches, img_matches );
+
+		drawMatches( img_1, keypoints_1, img_2, keypoints_2, matches, img_matches, Scalar(0,255,0), Scalar(0,0,255) );
 
 		for (int i=0; i < matches.size(); i++) {
 			obj.push_back( keypoints_1[ matches[i].queryIdx ].pt );

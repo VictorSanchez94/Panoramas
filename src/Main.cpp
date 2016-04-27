@@ -32,7 +32,7 @@ int main( int argc, char** argv ) {
 					resize(img_2, img_2, Size(0,0), 0.8, 0.8);
 
 					t_ini = clock();
-					img_1 = bruteForceMatch(img_1, img_2, 0, argv[3]);
+					img_1 = bruteForceMatch(img_1, img_2, 0, argv[3], argv[4]);
 					t_fin = clock();
 					double secs = (double)(t_fin - t_ini) / CLOCKS_PER_SEC;
 					cout << "Tiempo necesario para anyadir la imagen " << i+1 << ": " << secs*1000 << " milisegundos." << endl;
@@ -51,7 +51,7 @@ int main( int argc, char** argv ) {
 					resize(img_2, img_2, Size(0,0), 0.8, 0.8);
 
 					t_ini = clock();
-					img_1 = bruteForceMatch(img_1, img_2, 1, argv[3]);
+					img_1 = bruteForceMatch(img_1, img_2, 1, argv[3], argv[4]);
 					t_fin = clock();
 					double secs = (double)(t_fin - t_ini) / CLOCKS_PER_SEC;
 					cout << "Tiempo necesario para anyadir la imagen " << i+1 << ": " << secs*1000 << " milisegundos." << endl;
@@ -73,7 +73,7 @@ int main( int argc, char** argv ) {
 						resize(img_2, img_2, Size(0,0), 0.8, 0.8);
 
 						t_ini = clock();
-						img_1 = bruteForceMatch(img_1, img_2, 0, argv[4]);
+						img_1 = bruteForceMatch(img_1, img_2, 0, argv[4], argv[5]);
 						t_fin = clock();
 						double secs = (double)(t_fin - t_ini) / CLOCKS_PER_SEC;
 						cout << "Tiempo necesario para anyadir la imagen " << i+1 << ": " << secs*1000 << " milisegundos." << endl;
@@ -90,7 +90,7 @@ int main( int argc, char** argv ) {
 						resize(img_2, img_2, Size(0,0), 0.8, 0.8);
 
 						t_ini = clock();
-						img_1 = bruteForceMatch(img_1, img_2, 1, argv[4]);
+						img_1 = bruteForceMatch(img_1, img_2, 1, argv[4], argv[5]);
 						t_fin = clock();
 						double secs = (double)(t_fin - t_ini) / CLOCKS_PER_SEC;
 						cout << "Tiempo necesario para anyadir la imagen " << i+1 << ": " << secs*1000 << " milisegundos." << endl;
@@ -114,7 +114,7 @@ int main( int argc, char** argv ) {
 						resize(img_2, img_2, Size(0,0), 0.8, 0.8);
 
 						t_ini = clock();
-						img_1 = bruteForceMatch(img_1, img_2, 0, argv[4]);
+						img_1 = bruteForceMatch(img_1, img_2, 0, argv[4], argv[5]);
 						t_fin = clock();
 						double secs = (double)(t_fin - t_ini) / CLOCKS_PER_SEC;
 						cout << "Tiempo necesario para anyadir la imagen " << i+1 << ": " << secs*1000 << " milisegundos." << endl;
@@ -132,7 +132,7 @@ int main( int argc, char** argv ) {
 						resize(img_2, img_2, Size(0,0), 0.8, 0.8);
 
 						t_ini = clock();
-						img_1 = bruteForceMatch(img_1, img_2, 1, argv[4]);
+						img_1 = bruteForceMatch(img_1, img_2, 1, argv[4], argv[5]);
 						t_fin = clock();
 						double secs = (double)(t_fin - t_ini) / CLOCKS_PER_SEC;
 						cout << "Tiempo necesario para anyadir la imagen " << i+1 << ": " << secs*1000 << " milisegundos." << endl;
